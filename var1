@@ -1,0 +1,60 @@
+// Change these variables to change the appearance of the game:
+var size = 600;
+var numtiles = 4;
+var edgesize = 3;
+
+// Global variables. Don't change these!
+var step = size/numtiles;
+var cnv, buf;
+var frame = 0;
+var lastMouseX, lastMouseY;
+var COL, ROW;
+var dir = 'none'; // x, y, none (undetermined)
+var mode = 'auto'; // mouse or auto
+var amount;
+
+function preload() {
+  img = loadImage('myCanvas.png');
+}
+
+function setup() {
+	cnv = createCanvas(size, size);
+	buf = createGraphics(size, size);
+	frameRate(30);
+	background(100);
+	init();
+}
+
+function moveRow(row, n) {
+	copy(buf, 0, step*row, size, step, n, step*row, size, step);
+	n = (n>=0)? n - size : size + n;
+	copy(buf, 0, step*row, size, step, n, step*row, size, step);
+}
+
+function moveCol(col, n) {
+	copy(buf, step*col, 0, step, size, step*col, n, step, size);
+	n = (n>=0)? n - size : size + n;
+	copy(buf, step*col, 0, step, size, step*col, n, step, size);
+}
+	
+function startMove() {
+	lastMouseX = mouseX;
+	lastMouseY = mouseY;
+	COL = parseInt(mouseX/step);
+	ROW = parseInt(mouseY/step);
+	buf.copy(cnv, 0, 0, size, size, 0, 0, size, size);
+}
+	
+function endMove() {
+	if (mode=='mouse') {
+		if (dir=='x') {
+			var n = step * (parseInt(mouseX/step) - COL);
+			moveRow(ROW, n);
+		}
+		if (dir=='y') {
+			var n = step * (parseInt(mouseY/step) - ROW);
+			moveCol(COL, n);
+		}
+		dir = 'none';
+	}
+}
