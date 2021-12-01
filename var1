@@ -58,3 +58,66 @@ function endMove() {
 		dir = 'none';
 	}
 }
+function shuffleboard(i) {
+	if ((i%3)==0) buf.copy(cnv, 0, 0, size, size, 0, 0, size, size);
+	switch (i%6) {
+		case 0:
+			ROW = parseInt(random(numtiles));
+			amount = random([-1,1])*step;
+			moveRow(ROW, amount/3);
+			return;
+		case 1:
+			moveRow(ROW, 2*amount/3);
+			return;
+		case 2:
+			moveRow(ROW, amount);
+			return;
+		case 3:
+			COL = parseInt(random(numtiles));
+			amount = random([-1,1])*step;
+			moveCol(COL, amount/3);
+			return;
+		case 4:
+			moveCol(COL, 2*amount/3);
+			return;
+		case 5:
+			moveCol(COL, amount);
+			return;
+	}
+}
+
+function draw() {
+	frame++;
+	if (frame<=120) {
+		if (frame>30) {
+			// shuffle
+			var i = frame - 31;
+			shuffleboard(i);
+		}
+		if (frame==100) mode = 'mouse';
+		return;
+	}
+	
+	if (mode=='mouse' && mouseIsPressed) {
+		var _dir = abs(mouseX - pmouseX) - abs(mouseY - pmouseY);
+		if (_dir>0) {
+			// move row in x dir
+			if (dir=='none' || dir=='x') moveRow(ROW, mouseX - lastMouseX);
+			if (dir=='y') {
+				endMove();
+				startMove();
+			}
+			dir = 'x';
+		}
+		if (_dir<0) {
+			// move col in y dir
+			if (dir=='none' || dir=='y') moveCol(COL, mouseY - lastMouseY);
+			if (dir=='x') {
+				endMove();
+				startMove();
+			}
+			dir = 'y';
+		}
+	}
+}
+	
