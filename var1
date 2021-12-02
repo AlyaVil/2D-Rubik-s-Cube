@@ -120,4 +120,39 @@ function draw() {
 		}
 	}
 }
+function mousePressed() {
+	startMove();
+}
+	
+function mouseReleased() {
+  endMove();
+}
+
+
+// draws a default canvas
+function init() {
+	rectMode(RADIUS);
+	ellipseMode(RADIUS);
+	colorMode(HSB, 255);
+	
+	// black background
+	var ctr = width/2;
+	fill(40, 40, 40);
+	rect(ctr, ctr, ctr, ctr);
+	
+	// image
+	var ncircles = 6;
+	for (var i=0; i<ncircles; ++i) {
+		var rad = (size/2)*(1 - (i+1)/(ncircles+1));
+		fill(random(150), 150, 150);
+		ellipse(ctr, ctr, rad, rad);
+	}
+	
+	// tiles
+	fill(0, 0, 0);
+	for (var i=0; i<numtiles+1; ++i) {
+		rect(size/2, i*step, size/2, edgesize);
+		rect(i*step, size/2, edgesize, size/2);
+	}
+}
 	
